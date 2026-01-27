@@ -155,21 +155,29 @@ export default function Products() {
                                         </span>
                                     </td>
                                     <td>
-                                        <span
-                                            style={{
-                                                padding: "4px 12px",
-                                                background: "rgba(102, 126, 234, 0.1)",
-                                                color: "#667eea",
-                                                borderRadius: "12px",
-                                                fontSize: "13px",
-                                                fontWeight: "600",
-                                            }}
-                                        >
-                                            {Array.isArray(product.tags) && product.tags.length > 0
-                                                ? product.tags.join(", ")
-                                                : "No tags"}
-                                        </span>
+                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                                            {Array.isArray(product.tags) && product.tags.length > 0 ? (
+                                                product.tags.map((tag, index) => (
+                                                    <span
+                                                        key={index}
+                                                        style={{
+                                                            background: "#22c55e",
+                                                            color: "#fff",
+                                                            padding: "4px 10px",
+                                                            borderRadius: "16px",
+                                                            fontSize: "12px",
+                                                            fontWeight: "600",
+                                                        }}
+                                                    >
+                                                        {tag}
+                                                    </span>
+                                                ))
+                                            ) : (
+                                                <span style={{ color: "#94a3b8", fontSize: "13px" }}>No tags</span>
+                                            )}
+                                        </div>
                                     </td>
+
                                     <td style={{ fontWeight: "600", color: "#059669" }}>
                                         ₹{product.price.toFixed(2)}
                                     </td>

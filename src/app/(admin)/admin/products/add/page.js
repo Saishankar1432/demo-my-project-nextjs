@@ -9,7 +9,7 @@ export default function AddProduct() {
         price: "",
         description: "",
         category: "",
-        tags: "",
+        tags: [],
     });
     const [imagePreview, setImagePreview] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -26,6 +26,30 @@ export default function AddProduct() {
         reader.onloadend = () => setImagePreview(reader.result);
         reader.readAsDataURL(file);
     };
+
+    const handleTagKeyDown = (e) => {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+
+            const value = e.target.value.trim();
+            if (!value) return;
+
+            if (!formData.tags.includes(value)) {
+                setFormData({
+                    ...formData,
+                    tags: [...formData.tags, value],
+                });
+            }
+
+            e.target.value = "";
+        }
+    };
+    const removeTag = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            tags: prev.tags.filter((_, i) => i !== index),
+        }));
+    };  
 
     const addProduct = async (e) => {
         e.preventDefault();
@@ -114,15 +138,29 @@ export default function AddProduct() {
                         </div>
                     </div>
                     <div className="form-group">
-                        <label>Tags (comma-separated)</label>
-                        <input
-                            name="tags"
-                            type="text"
-                            className="admin-input"
-                            placeholder="e.g., premium, bestseller, new"
-                            value={formData.tags}
-                            onChange={handleInputChange}
-                        />
+                        <label>Tags</label>
+
+                        <div className="tags-input-container">
+                            {formData.tags.map((tag, index) => (
+                                <span className="tag-chip" key={index}>
+                                    {tag}
+                                    <button
+                                        type="button"
+                                        className="tag-remove"
+                                        onClick={() => removeTag(index)}
+                                    >
+                                        ×
+                                    </button>
+                                </span>
+                            ))}
+
+                            <input
+                                type="text"
+                                className="tags-input"
+                                placeholder="Type and press Enter"
+                                onKeyDown={handleTagKeyDown}
+                            />
+                        </div>
                     </div>
 
                     <div className="form-group">

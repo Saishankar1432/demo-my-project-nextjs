@@ -9,6 +9,7 @@ export default function EditProduct() {
 
     const [formData, setFormData] = useState(null);
     const [error, setError] = useState(null);
+    const [tagInput, setTagInput] = useState("");
 
     useEffect(() => {
         if (!id) return;
@@ -16,13 +17,14 @@ export default function EditProduct() {
         const fetchProduct = async () => {
             try {
                 const res = await fetch(`/api/products/${id}`);
-
-                if (!res.ok) {
-                    throw new Error("Failed to fetch product");
-                }
+                if (!res.ok) throw new Error("Failed to fetch product");
 
                 const data = await res.json();
-                setFormData(data);
+
+                setFormData({
+                    ...data,
+                    tags: Array.isArray(data.tags) ? data.tags : [],
+                });
             } catch (err) {
                 console.error(err);
                 setError("Product not found");
@@ -34,6 +36,29 @@ export default function EditProduct() {
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleTagKeyDown = (e) => {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+
+            const value = tagInput.trim();
+            if (!value) return;
+
+            if (!formData.tags.includes(value)) {
+                setFormData({
+                    ...formData,
+                    tags: [...formData.tags, value],
+                });
+            }
+
+            setTagInput("");
+        }
+    };
+
+    const removeTag = (index) => {
+        const updatedTags = formData.tags.filter((_, i) => i !== index);
+        setFormData({ ...formData, tags: updatedTags });
     };
 
     const handleUpdate = async (e) => {
@@ -56,16 +81,8 @@ export default function EditProduct() {
         }
     };
 
-    if (error) {
-        return <p style={{ padding: 20 }}>{error}</p>;
-    }
-    if (!formData) {
-        return <p style={{ padding: 20 }}>Loading...</p>;
-    }
-
-    const tagsString = Array.isArray(formData.tags)
-        ? formData.tags.join(", ")
-        : formData.tags || "";
+    if (error) return <p style={{ padding: 20 }}>{error}</p>;
+    if (!formData) return <p style={{ padding: 20 }}>Loading...</p>;
 
     return (
         <div className="add-product-container">
@@ -105,21 +122,37 @@ export default function EditProduct() {
                                 value={formData.category || ""}
                                 onChange={handleChange}
                                 className="admin-input"
-                                placeholder="e.g., Electronics, Clothing"
                                 required
                             />
                         </div>
                     </div>
 
                     <div className="form-group">
-                        <label>Tags (comma-separated)</label>
-                        <input
-                            name="tags"
-                            value={tagsString}
-                            onChange={handleChange}
-                            className="admin-input"
-                            placeholder="e.g., premium, bestseller, new"
-                        />
+                        <label>Tags</label>
+
+                        <div className="tags-input-container">
+                            {formData.tags.map((tag, index) => (
+                                <span key={index} className="tag-chip">
+                                    {tag}
+                                    <button
+                                        type="button"
+                                        className="tag-remove"
+                                        onClick={() => removeTag(index)}
+                                    >
+                                        ×
+                                    </button>
+                                </span>
+                            ))}
+
+                            <input
+                                type="text"
+                                value={tagInput}
+                                onChange={(e) => setTagInput(e.target.value)}
+                                onKeyDown={handleTagKeyDown}
+                                className="tags-input"
+                                placeholder="Type and press Enter"
+                            />
+                        </div>
                     </div>
 
                     <div className="form-group">
