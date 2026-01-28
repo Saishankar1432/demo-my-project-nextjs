@@ -2,24 +2,29 @@
 
 import "./products.css";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function ProductsPage() {
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState("");
 
     const fetchProducts = async (query = "") => {
-        const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/products?q=${query}`,
-            { cache: "no-store" }
-        );
+        try {
+            const res = await fetch(`/api/products?q=${query}`, {
+                cache: "no-store",
+            });
 
-        if (!res.ok) {
+            if (!res.ok) {
+                setProducts([]);
+                return;
+            }
+
+            const data = await res.json();
+            setProducts(data);
+        } catch (err) {
+            console.error("Fetch products error:", err);
             setProducts([]);
-            return;
         }
-
-        const data = await res.json();
-        setProducts(data);
     };
 
     useEffect(() => {
@@ -40,7 +45,6 @@ export default function ProductsPage() {
                     Discover our amazing collection of premium products
                 </p>
 
-          
                 <input
                     type="text"
                     placeholder="Search Product..."
@@ -58,34 +62,49 @@ export default function ProductsPage() {
                     </div>
                 ) : (
                     <div className="products-grid">
-                        {products.map((product) => (
-                            <div key={product._id} className="product-card">
-                                <div className="product-image-wrapper">
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        className="product-image"
-                                    />
-                                </div>
+                        {products.map((product) => {
+                            const imageSrc =
+                                product.images && product.images.length > 0
+                                    ? product.images[0]
+                                    : "/no-image.png"; // ✅ fallback image
 
-                                <div className="product-content">
-                                    <h3 className="product-name">{product.name}</h3>
-                                    <p className="product-description">
-                                        {product.description || "No description available"}
-                                    </p>
-                                    <span className="product-category">
-                                        {product.category}
-                                    </span> 
-
-                                    <div className="product-footer">
-                                        <span className="product-price">
-                                            ₹{product.price.toFixed(2)}
-                                        </span>
-                                        <button className="product-btn">Buy now</button>
+                            return (
+                                <Link
+                                    key={product._id}
+                                    href={`/product/${product._id}`}
+                                    className="product-card"
+                                >
+                                    <div className="product-image-wrapper">
+                                        <img
+                                            src={imageSrc}
+                                            alt={product.name}
+                                        />
                                     </div>
-                                </div>
-                            </div>
-                        ))}
+
+                                    <div className="product-content">
+                                        <h3 className="product-name">{product.name}</h3>
+
+                                        <p className="product-description">
+                                            {product.description || "No description available"}
+                                        </p>
+
+                                        <span className="product-category">
+                                            {product.category}
+                                        </span>
+
+                                        <div className="product-footer">
+                                            <span className="product-price">
+                                                ₹{product.price.toFixed(2)}
+                                            </span>
+
+                                            <button className="product-btn">
+                                                Buy now
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 )}
             </div>

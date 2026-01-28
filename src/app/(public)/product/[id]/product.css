@@ -1,0 +1,287 @@
+/* =========================
+   PRODUCT DETAIL PAGE (PDP)
+========================= */
+
+.pdp-container {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 120px 24px 80px;
+    display: grid;
+    /* 3 Columns: Thumbs | Main | Details */
+    grid-template-columns: 80px 500px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* ================= LEFT: THUMBNAILS ================= */
+.pdp-thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pdp-thumb {
+    width: 64px;
+    height: 64px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pdp-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pdp-thumb:hover,
+.pdp-thumb.active {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* ================= MIDDLE: MAIN IMAGE (ZOOM) ================= */
+.pdp-main-image {
+    height: 550px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 10;
+    /* Ensure zoom flows over */
+}
+
+/* ReactImageMagnify overrides */
+.pdp-main-image>div {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ================= RIGHT: DETAILS ================= */
+.pdp-details {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.pdp-brand {
+    font-size: 14px;
+    color: #2563eb;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.pdp-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 12px;
+    line-height: 1.3;
+}
+
+.pdp-category {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+/* Rating */
+.pdp-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #f59e0b;
+    margin-bottom: 20px;
+}
+
+.pdp-rating span {
+    color: #94a3b8;
+}
+
+/* Price */
+.pdp-price-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.pdp-price {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+.pdp-mrp {
+    font-size: 16px;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+.pdp-discount {
+    font-size: 16px;
+    color: #16a34a;
+    font-weight: 700;
+}
+
+.pdp-variant-note {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+
+/* Offers Box */
+.pdp-offers {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #334155;
+    margin-bottom: 24px;
+}
+
+/* Description */
+.pdp-description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #475569;
+    margin-bottom: 30px;
+}
+
+/* Variants */
+.pdp-variants {
+    margin-bottom: 30px;
+}
+
+.pdp-variant-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+
+.pdp-variant-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pdp-variant-btn {
+    padding: 8px 16px;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.pdp-variant-btn.active,
+.pdp-variant-btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+/* Actions */
+.pdp-actions {
+    display: flex;
+    gap: 16px;
+}
+
+.pdp-buy,
+.pdp-cart {
+    flex: 1;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    transition: transform 0.1s;
+}
+
+.pdp-cart {
+    background: #ff9f00;
+    color: #fff;
+}
+
+.pdp-buy {
+    background: #fb641b;
+    color: #fff;
+}
+
+.pdp-buy:hover,
+.pdp-cart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 1024px) {
+    .pdp-container {
+        grid-template-columns: 1fr;
+        padding-top: 100px;
+        gap: 24px;
+    }
+
+    .pdp-thumbs {
+        flex-direction: row;
+        order: 2;
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .pdp-details {
+        padding-left: 0;
+        order: 3;
+    }
+
+    .pdp-main-image {
+        height: 400px;
+        order: 1;
+    }
+}
+
+/* Main image wrapper */
+.pdp-main-image {
+  position: relative;
+  height: 520px;
+  background: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* This is the zoom container (RIGHT SIDE) */
+.image-magnify-container {
+  position: relative;
+}
+
+/* React Image Magnify injected container */
+.react-image-magnify__enlarged-image-container {
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  background: #fff;
+  margin-left: 24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 20;
+}

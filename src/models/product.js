@@ -4,10 +4,33 @@ const ProductSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     price: { type: Number, required: true },
+    category: String,
     description: String,
-    image: String,
-    category: { type: String, default: "Uncategorized" },
-    tags: { type: [String], default: [] },
+    tags: [String],
+
+    // ✅ MULTIPLE IMAGES (Global fallback)
+    images: {
+      type: [String],
+      default: [],
+    },
+
+    // ✅ VARIANTS (New)
+    variants: [
+      {
+        name: { type: String, required: true }, // e.g., "Red", "Small"
+        price: { type: Number, required: true },
+        stock: { type: Number, default: 0 },
+        isDefault: { type: Boolean, default: false },
+        images: [
+          {
+            secure_url: String,
+            public_id: String,
+            order: Number,
+            isDefault: Boolean,
+          },
+        ],
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -16,12 +16,24 @@ export async function connectToDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI, {
+    const opts = {
       dbName: "myprojects",
+      bufferCommands: false,
+    };
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      console.log("✅ MongoDB connected");
+      return mongoose;
     });
   }
 
-  cached.conn = await cached.promise;
-  console.log("✅ MongoDB connected");
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    console.error("❌ MongoDB connection error:", e);
+    throw e;
+  }
+
   return cached.conn;
 }

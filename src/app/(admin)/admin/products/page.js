@@ -17,10 +17,7 @@ export default function Products() {
             setLoading(true);
             const res = await fetch("/api/products");
 
-            let data = [];
-            try {
-                data = await res.json();
-            } catch { }
+            const data = await res.json();
 
             if (res.ok) {
                 setProducts(data);
@@ -35,7 +32,6 @@ export default function Products() {
         }
     };
 
-
     const handleDelete = async (id) => {
         if (!confirm("Are you sure you want to delete this product?")) return;
 
@@ -46,7 +42,7 @@ export default function Products() {
 
             if (res.ok) {
                 alert("Product deleted");
-                fetchProducts(); // refresh admin list
+                fetchProducts();
             } else {
                 alert("Delete failed");
             }
@@ -54,8 +50,6 @@ export default function Products() {
             console.error(err);
         }
     };
-
-
 
     if (loading) {
         return (
@@ -122,98 +116,110 @@ export default function Products() {
                             </tr>
                         </thead>
                         <tbody>
-                            {products.map((product) => (
-                                <tr key={product._id}>
-                                    <td>
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            style={{
-                                                width: "60px",
-                                                height: "60px",
-                                                objectFit: "cover",
-                                                borderRadius: "8px",
-                                                border: "2px solid #e2e8f0",
-                                            }}
-                                        />
-                                    </td>
-                                    <td style={{ fontWeight: "600", color: "#1e293b" }}>
-                                        {product.name}
-                                    </td>
-                                    <td>
-                                        <span
-                                            style={{
-                                                padding: "4px 12px",
-                                                background: "rgba(102, 126, 234, 0.1)",
-                                                color: "#667eea",
-                                                borderRadius: "12px",
-                                                fontSize: "13px",
-                                                fontWeight: "600",
-                                            }}
-                                        >
-                                            {product.category}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                                            {Array.isArray(product.tags) && product.tags.length > 0 ? (
-                                                product.tags.map((tag, index) => (
-                                                    <span
-                                                        key={index}
-                                                        style={{
-                                                            background: "#22c55e",
-                                                            color: "#fff",
-                                                            padding: "4px 10px",
-                                                            borderRadius: "16px",
-                                                            fontSize: "12px",
-                                                            fontWeight: "600",
-                                                        }}
-                                                    >
-                                                        {tag}
-                                                    </span>
-                                                ))
-                                            ) : (
-                                                <span style={{ color: "#94a3b8", fontSize: "13px" }}>No tags</span>
-                                            )}
-                                        </div>
-                                    </td>
+                            {products.map((product) => {
+                                const imageSrc =
+                                    product.images && product.images.length > 0
+                                        ? product.images[0]
+                                        : "/no-image.png";
 
-                                    <td style={{ fontWeight: "600", color: "#059669" }}>
-                                        ₹{product.price.toFixed(2)}
-                                    </td>
-                                    <td style={{ maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                        {product.description || "No description"}
-                                    </td>
-                                    <td>
-                                        <div style={{ display: "flex", gap: "8px" }}>
-                                            <button
-                                                onClick={() => router.push(`/admin/products/edit/${product._id}`)}
+                                return (
+                                    <tr key={product._id}>
+                                        <td>
+                                            <img
+                                                src={imageSrc}
+                                                alt={product.name}
                                                 style={{
-                                                    padding: "8px 16px",
-                                                    background: "#667eea",
-                                                    color: "#fff",
-                                                    border: "none",
+                                                    width: "60px",
+                                                    height: "60px",
+                                                    objectFit: "cover",
                                                     borderRadius: "8px",
-                                                    cursor: "pointer",
+                                                    border: "2px solid #e2e8f0",
+                                                }}
+                                            />
+                                        </td>
+
+                                        <td style={{ fontWeight: "600", color: "#1e293b" }}>
+                                            {product.name}
+                                        </td>
+
+                                        <td>
+                                            <span
+                                                style={{
+                                                    padding: "4px 12px",
+                                                    background: "rgba(102, 126, 234, 0.1)",
+                                                    color: "#667eea",
+                                                    borderRadius: "12px",
                                                     fontSize: "13px",
                                                     fontWeight: "600",
-                                                    transition: "all 0.2s ease",
                                                 }}
-                                                onMouseOver={(e) => e.target.style.background = "#5568d3"}
-                                                onMouseOut={(e) => e.target.style.background = "#667eea"}
                                             >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="btn-delete"
-                                                onClick={() => handleDelete(product._id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                                {product.category}
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                                                {product.tags?.length > 0 ? (
+                                                    product.tags.map((tag, index) => (
+                                                        <span
+                                                            key={index}
+                                                            style={{
+                                                                background: "#22c55e",
+                                                                color: "#fff",
+                                                                padding: "4px 10px",
+                                                                borderRadius: "16px",
+                                                                fontSize: "12px",
+                                                                fontWeight: "600",
+                                                            }}
+                                                        >
+                                                            {tag}
+                                                        </span>
+                                                    ))
+                                                ) : (
+                                                    <span style={{ color: "#94a3b8", fontSize: "13px" }}>
+                                                        No tags
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </td>
+
+                                        <td style={{ fontWeight: "600", color: "#059669" }}>
+                                            ₹{product.price.toFixed(2)}
+                                        </td>
+
+                                        <td style={{ maxWidth: "300px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                            {product.description || "No description"}
+                                        </td>
+
+                                        <td>
+                                            <div style={{ display: "flex", gap: "8px" }}>
+                                                <button
+                                                    onClick={() => router.push(`/admin/products/edit/${product._id}`)}
+                                                    style={{
+                                                        padding: "8px 16px",
+                                                        background: "#667eea",
+                                                        color: "#fff",
+                                                        border: "none",
+                                                        borderRadius: "8px",
+                                                        cursor: "pointer",
+                                                        fontSize: "13px",
+                                                        fontWeight: "600",
+                                                    }}
+                                                >
+                                                    Edit
+                                                </button>
+
+                                                <button
+                                                    className="btn-delete"
+                                                    onClick={() => handleDelete(product._id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
